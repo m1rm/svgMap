@@ -28,7 +28,9 @@
     "*.css"
   ],
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "assets"
   ],
   "dependencies": {
     "svg-pan-zoom": "^3.6.2"
