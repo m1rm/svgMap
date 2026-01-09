@@ -1,7 +1,7 @@
 {
   "name": "svgmap",
   "description": "svgMap is a JavaScript library that lets you easily create an interactable world map comparing customizable data for each country.",
-  "version": "2.18.1",
+  "version": "2.18.2",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -28,7 +28,9 @@
     "*.css"
   ],
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "assets"
   ],
   "dependencies": {
     "svg-pan-zoom": "^3.6.2"
