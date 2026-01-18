@@ -1,3 +1,5 @@
+const svgPanZoom = require('svg-pan-zoom');
+
 export default class svgMap {
   constructor(options = {}) {
     const defaultOptions = {
@@ -1152,7 +1154,7 @@ export default class svgMap {
     var me = this;
 
     // Init pan zoom
-    this.mapPanZoom = svgPanZoom(this.mapImage, {
+    this.mapPanZoom = svgPanZoom.svgPanZoom(this.mapImage, {
       zoomEnabled: this.options.allowInteraction,
       panEnabled: this.options.allowInteraction,
       fit: true,
