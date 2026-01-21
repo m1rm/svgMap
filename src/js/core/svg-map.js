@@ -1154,7 +1154,7 @@ export default class svgMap {
     var me = this;
 
     // Init pan zoom
-    this.mapPanZoom = svgPanZoom.svgPanZoom(this.mapImage, {
+    this.mapPanZoom = svgPanZoom(this.mapImage, {
       zoomEnabled: this.options.allowInteraction,
       panEnabled: this.options.allowInteraction,
       fit: true,
