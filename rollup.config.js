@@ -1,4 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 import postcss from 'rollup-plugin-postcss';
 import fs from 'fs';
@@ -40,7 +41,8 @@ export default {
           mangle: true,
           format: {
             comments: false
-          }
+          },
+          maxWorkers: 1
         })
       ]
     },
@@ -61,13 +63,19 @@ export default {
           mangle: true,
           format: {
             comments: false
-          }
+          },
+          maxWorkers: 1
         })
       ]
     }
   ],
   plugins: [
-    resolve(),
+    resolve({
+      mainFields: ['module', 'main']
+    }),
+    commonjs({
+      include: /node_modules/
+    }),
     postcss({
       extract: 'svg-map.css',
       minimize: false,
