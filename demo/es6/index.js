@@ -1,5 +1,5 @@
 import svgMap from 'svgmap';
-import 'svgmap/dist/svgMap.min.css';
+import 'svgmap/style';
 
 // Demo GDP
 import dataGDP from './data/gdp';

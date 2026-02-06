@@ -16,13 +16,15 @@
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
-  "style": "./dist/svgmap.css",
+  "style": "./dist/svg-map.css",
   "exports": {
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
-    }
+    },
+    "./style": "./dist/svg-map.css",
+    "./style.min": "./dist/svg-map.min.css"
   },
   "sideEffects": [
     "*.css"
