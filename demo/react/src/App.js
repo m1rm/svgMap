@@ -4,7 +4,7 @@ import './App.css';
 
 // svgMap
 import svgMap from 'svgmap';
-import 'svgmap/dist/svgMap.min.css';
+import 'svgmap/style';
 
 class App extends Component {
 
