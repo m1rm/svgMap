@@ -44,8 +44,8 @@
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
     "csso": "^5.0.5",
-    "rollup": "^4.54.0",
+    "rollup": "^4.57.1",
     "rollup-plugin-postcss": "^4.0.2",
-    "sass": "^1.97.1"
+    "sass": "^1.97.3"
   }
 }
