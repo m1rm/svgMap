@@ -31,6 +31,24 @@
         </script>
       </div>
 
+      <!-- Demo GPD with selected tooltips shown on load -->
+
+      <div class="demo-container">
+        <h2>GDP per capita (selected tooltips shown on load)</h2>
+
+        <div id="svgMapGPDTooltips"></div>
+        <script>
+          new svgMap({
+            targetElementID: 'svgMapGPDTooltips',
+            data: svgMapDataGPD,
+            hideFlag: true,
+            showTooltipsOnLoad: ['DE', 'IN'],
+            mouseWheelZoomEnabled: true,
+            mouseWheelZoomWithKey: true
+          });
+        </script>
+      </div>
+
       <!-- Demo population -->
 
       <div class="demo-container">

@@ -99,6 +99,7 @@ You can pass the following options into svgMap:
 | `hideFlag` | `boolean` | `false` | Hide the flag in tooltips |
 | `noDataText` | `string` | `'No data available'` | The text to be shown when no data is present |
 | `touchLink` | `boolean` | `false` | Set to `true` to open the link (see `data.values.link`) on mobile devices, by default the tooltip will be shown |
+| `showTooltipsOnLoad` | `boolean`, `array`, `function` | `false` | Show tooltips when the map loads. Set to `true` to show all tooltips, an array of country IDs to show selected tooltips, or a function (`function (countryID, countryValues) { return true; }`) to decide per country. This can cause overlapping tooltips, especially at world zoom. |
 | `onGetTooltip` | `function` | | Called when a tooltip is created to custimize the tooltip content (`function (tooltipDiv, countryID, countryValues) { return 'Custom HTML'; }`) |
 | `countries` | `object` | | Additional options specific to countries: |
 | &nbsp;&nbsp;&nbsp;`↳ EH` | `boolean` | `true` | When set to `false`, Western Sahara (EH) will be combined with Morocco (MA) |

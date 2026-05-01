@@ -70,6 +70,9 @@ export default class svgMap {
       // Set to true to open the link on mobile devices, set to false (default) to show the tooltip
       touchLink: false,
 
+      // Set which tooltips to show when the map loads: true for all, an array of country IDs, or a function
+      showTooltipsOnLoad: false,
+
       // Set to true to show the to show a zoom reset button
       showZoomReset: false,
 
@@ -934,6 +937,7 @@ export default class svgMap {
     }.bind(this);
 
     // Add map elements
+    var countryElements = [];
     Object.keys(mapPaths).forEach(
       function (countryID) {
         var countryData = this.mapPaths[countryID];
@@ -955,6 +959,7 @@ export default class svgMap {
         countryElement.classList.add('svgMap-country');
 
         this.mapImage.appendChild(countryElement);
+        countryElements.push(countryElement);
 
         // Add tooltip when touch is used
         function handlePointerMove(e) {
@@ -992,7 +997,10 @@ export default class svgMap {
               .querySelectorAll('.svgMap-active')
               .forEach(el => el.classList.remove('svgMap-active'));
 
-            countryElement.parentNode.appendChild(countryElement);
+            countryElement.parentNode.insertBefore(
+              countryElement,
+              this.persistentTooltipGroup || null
+            );
             countryElement.classList.add('svgMap-active');
 
             const countryID = countryElement.getAttribute('data-id');
@@ -1089,6 +1097,10 @@ export default class svgMap {
         }
       }.bind(this)
     );
+
+    if (this.options.showTooltipsOnLoad) {
+      this.createPersistentTooltips(countryElements);
+    }
 
     let pointerStart = null;
     let activeCountry = null;
@@ -1210,13 +1222,83 @@ export default class svgMap {
     }
   }
 
+  // Create the persistent tooltips
+
+  createPersistentTooltips(countryElements) {
+    if (this.persistentTooltipGroup) {
+      this.persistentTooltipGroup.remove();
+    }
+
+    this.persistentTooltipGroup = document.createElementNS(
+      'http://www.w3.org/2000/svg',
+      'g'
+    );
+    this.persistentTooltipGroup.classList.add('svgMap-persistent-tooltips');
+    this.mapImage.appendChild(this.persistentTooltipGroup);
+
+    countryElements.forEach(
+      function (countryElement) {
+        var countryID = countryElement.getAttribute('data-id');
+        if (!this.shouldShowTooltipOnLoad(countryID)) {
+          return;
+        }
+
+        var boundingBox = countryElement.getBBox();
+        var tooltipPosition = {
+          x: boundingBox.x + boundingBox.width / 2,
+          y: boundingBox.y + boundingBox.height / 2
+        };
+
+        var tooltipObject = document.createElementNS(
+          'http://www.w3.org/2000/svg',
+          'foreignObject'
+        );
+        tooltipObject.setAttribute('x', tooltipPosition.x);
+        tooltipObject.setAttribute('y', tooltipPosition.y);
+        tooltipObject.setAttribute('width', 1);
+        tooltipObject.setAttribute('height', 1);
+        tooltipObject.classList.add('svgMap-persistent-tooltip-wrapper');
+
+        var tooltipElement = this.createElement(
+          'div',
+          'svgMap-persistent-tooltip',
+          tooltipObject
+        );
+        tooltipElement.append(this.getTooltipContent(countryID, tooltipElement));
+
+        this.persistentTooltipGroup.appendChild(tooltipObject);
+      }.bind(this)
+    );
+  }
+
+  // Check if a persistent tooltip should be shown on load
+
+  shouldShowTooltipOnLoad(countryID) {
+    var showTooltipsOnLoad = this.options.showTooltipsOnLoad;
+    var countryValues = this.options.data.values[countryID];
+
+    if (showTooltipsOnLoad === true) {
+      return true;
+    }
+
+    if (Array.isArray(showTooltipsOnLoad)) {
+      return showTooltipsOnLoad.indexOf(countryID) !== -1;
+    }
+
+    if (typeof showTooltipsOnLoad === 'function') {
+      return showTooltipsOnLoad(countryID, countryValues);
+    }
+
+    return false;
+  }
+
   // Create the tooltip content
 
-  getTooltipContent(countryID) {
+  getTooltipContent(countryID, tooltipDiv = this.tooltip) {
     // Custom tooltip
     if (this.options.onGetTooltip) {
       var customDiv = this.options.onGetTooltip(
-        this.tooltip,
+        tooltipDiv,
         countryID,
         this.options.data.values[countryID]
       );

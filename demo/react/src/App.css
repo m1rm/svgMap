@@ -2,3 +2,8 @@
   text-align: center;
   font-family: sans-serif;
 }
+
+.demo-container {
+  margin: 0 auto 80px;
+  max-width: 800px;
+}

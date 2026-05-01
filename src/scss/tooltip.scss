@@ -1,6 +1,7 @@
 @use 'variables' as *;
 
-.svgMap-tooltip {
+.svgMap-tooltip,
+.svgMap-persistent-tooltip {
   box-shadow: 0 0 3px $mapTooltipBoxShadowColor;
   position: absolute;
   z-index: 2;
@@ -8,7 +9,6 @@
   background: $mapTooltipBackgroundColor;
   transform: translate(-50%, -100%);
   border-bottom: 1px solid $mapTooltipColor;
-  display: none;
   pointer-events: none;
   min-width: 60px;
 
@@ -16,10 +16,6 @@
     transform: translate(-50%, 0);
     border-bottom: 0;
     border-top: 1px solid $mapTooltipColor;
-  }
-
-  &.svgMap-active {
-    display: block;
   }
 
   .svgMap-tooltip-content-container {
@@ -125,4 +121,28 @@
       transform: translateX(-50%) scaleY(-1);
     }
   }
+}
+
+.svgMap-tooltip {
+  display: none;
+
+  &.svgMap-active {
+    display: block;
+  }
+}
+
+.svgMap-persistent-tooltips,
+.svgMap-persistent-tooltip-wrapper {
+  pointer-events: none;
+}
+
+.svgMap-persistent-tooltip-wrapper {
+  overflow: visible;
+}
+
+.svgMap-persistent-tooltip {
+  display: block;
+  left: 0;
+  top: 0;
+  width: max-content;
 }
