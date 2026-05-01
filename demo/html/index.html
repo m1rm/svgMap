@@ -31,6 +31,35 @@
         </script>
       </div>
 
+      <!-- Demo country click callback -->
+
+      <div class="demo-container">
+        <h2>Country click callback</h2>
+
+        <div id="svgMapClickCallback"></div>
+        <div
+          id="svgMapClickCallbackResult"
+          class="demo-click-result"
+        >
+          Click a country on the map.
+        </div>
+        <script>
+          var svgMapClickCallbackDemo = new svgMap({
+            targetElementID: 'svgMapClickCallback',
+            data: svgMapDataGPD,
+            mouseWheelZoomEnabled: true,
+            mouseWheelZoomWithKey: true,
+            onCountryClick: function (countryID) {
+              var label =
+                svgMapClickCallbackDemo.countries[countryID] || countryID;
+              document.getElementById('svgMapClickCallbackResult').textContent =
+                'Selected: ' + label + ' (' + countryID + ')';
+              return false;
+            }
+          });
+        </script>
+      </div>
+
       <!-- Demo population -->
 
       <div class="demo-container">
