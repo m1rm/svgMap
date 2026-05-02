@@ -6,7 +6,7 @@ import './App.css';
 import svgMap from 'svgmap';
 import 'svgmap/style';
 
-const sampleGdpData = {
+const gdpData = {
   data: {
     gdp: {
       name: 'GDP per capita',
@@ -41,7 +41,7 @@ class App extends Component {
     if (!this.svgMap) {
       this.svgMap = new svgMap({
         targetElementID: 'svgMap',
-        data: sampleGdpData
+        data: gdpData
       });
     }
 
@@ -59,23 +59,32 @@ class App extends Component {
       });
       this.clickDemoMap = clickDemoMap;
     }
+
+    if (!this.svgMapWithTooltips) {
+
+      var mySvgMapWithTooltips = new svgMap({
+        targetElementID: 'svgMapTooltips',
+        data: gdpData,
+        hideFlag: true,
+        showTooltipsOnLoad: ['AF', 'AL', 'DZ']
+      });
+
+      this.svgMapWithTooltips = mySvgMapWithTooltips;
+    }
   }
 
   render() {
     return (
       <div className='app'>
         <h1>svgMap React demo</h1>
-
-        <section className='demo-section'>
-          <h2>GDP per capita (sample)</h2>
+        <div className='demo-container'>
+          <h2>GDP per capita</h2>
           <div id='svgMap'></div>
-        </section>
-
-        <section className='demo-section'>
-          <h2>Country click callback</h2>
-          <div id='svgMapClickCallback'></div>
-          <div className='demo-click-result'>{this.state.clickDemoSelection}</div>
-        </section>
+        </div>
+        <div className='demo-container'>
+          <h2>GDP per capita (selected tooltips shown on load)</h2>
+          <div id='svgMapTooltips'></div>
+        </div>
       </div>
     );
   }

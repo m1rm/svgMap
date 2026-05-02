@@ -28,3 +28,8 @@
   min-height: 1.4em;
   text-align: left;
 }
+
+.demo-container {
+  margin: 0 auto 80px;
+  max-width: 800px;
+}

@@ -31,31 +31,20 @@
         </script>
       </div>
 
-      <!-- Demo country click callback -->
+      <!-- Demo GPD with selected tooltips shown on load -->
 
       <div class="demo-container">
-        <h2>Country click callback</h2>
+        <h2>GDP per capita (selected tooltips shown on load)</h2>
 
-        <div id="svgMapClickCallback"></div>
-        <div
-          id="svgMapClickCallbackResult"
-          class="demo-click-result"
-        >
-          Click a country on the map.
-        </div>
+        <div id="svgMapGPDTooltips"></div>
         <script>
-          var svgMapClickCallbackDemo = new svgMap({
-            targetElementID: 'svgMapClickCallback',
+          new svgMap({
+            targetElementID: 'svgMapGPDTooltips',
             data: svgMapDataGPD,
+            hideFlag: true,
+            showTooltipsOnLoad: ['DE', 'IN'],
             mouseWheelZoomEnabled: true,
-            mouseWheelZoomWithKey: true,
-            onCountryClick: function (countryID) {
-              var label =
-                svgMapClickCallbackDemo.countries[countryID] || countryID;
-              document.getElementById('svgMapClickCallbackResult').textContent =
-                'Selected: ' + label + ' (' + countryID + ')';
-              return false;
-            }
+            mouseWheelZoomWithKey: true
           });
         </script>
       </div>
