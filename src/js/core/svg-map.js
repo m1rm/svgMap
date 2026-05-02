@@ -1306,6 +1306,7 @@ export default class svgMap {
           tooltipObject
         );
         tooltipElement.append(this.getTooltipContent(countryID, tooltipElement));
+        this.createElement('div', 'svgMap-tooltip-pointer', tooltipElement);
 
         this.persistentTooltipGroup.appendChild(tooltipObject);
       }.bind(this)
