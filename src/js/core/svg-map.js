@@ -81,6 +81,10 @@ export default class svgMap {
         return null;
       },
 
+      // Called on country click (pointer released without dragging). Receives
+      // (countryID, event). Return false to skip opening data.values[*].link.
+      onCountryClick: null,
+
       // Country specific options
       countries: {
         // Western Sahara: Set to false to combine Morocco (MA) and Western Sahara (EH)
@@ -120,6 +124,9 @@ export default class svgMap {
     // Wrapper element
     this.wrapper = document.getElementById(this.options.targetElementID);
     this.wrapper.classList.add('svgMap-wrapper');
+    if (typeof this.options.onCountryClick === 'function') {
+      this.wrapper.classList.add('svgMap-country-click-callback');
+    }
 
     // Container element
     this.container = document.createElement('div');
@@ -1132,15 +1139,33 @@ export default class svgMap {
 
       const countryID = countryElement.getAttribute('data-id');
       const link = countryElement.getAttribute('data-link');
-      const target = countryElement.getAttribute('data-link-target');
-      if (!link) return;
-
+      const linkTarget = countryElement.getAttribute('data-link-target');
+      const hasCallback = typeof this.options.onCountryClick === 'function';
+      const hasLink = !!link;
       const isTouch = e.pointerType === 'touch' || e.pointerType === 'pen';
+
+      if (!hasLink && !hasCallback) return;
+
+      const willNavigate =
+        hasLink &&
+        (!isTouch || countryElement.classList.contains('svgMap-active'));
+
+      const shouldFireCallback =
+        hasCallback && (!hasLink || !isTouch || willNavigate);
+
+      var callbackResult;
+      if (shouldFireCallback) {
+        callbackResult = this.options.onCountryClick(countryID, e);
+      }
+
+      if (!hasLink) return;
+
+      if (callbackResult === false) return;
 
       if (isTouch) {
         // Touch: only open if already active
         if (countryElement.classList.contains('svgMap-active')) {
-          if (target) window.open(link, target);
+          if (linkTarget) window.open(link, linkTarget);
           else window.location.href = link;
         } else {
           // first tap shows tooltip
@@ -1152,7 +1177,7 @@ export default class svgMap {
         }
       } else {
         // Desktop: open immediately
-        if (target) window.open(link, target);
+        if (linkTarget) window.open(link, linkTarget);
         else window.location.href = link;
       }
     });

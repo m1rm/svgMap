@@ -30,16 +30,34 @@ const gdpData = {
 };
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      clickDemoSelection: 'Click a country on the map.'
+    };
+  }
 
   componentDidMount() {
     if (!this.svgMap) {
-
-      var mySvgMap = new svgMap({
+      this.svgMap = new svgMap({
         targetElementID: 'svgMap',
         data: gdpData
       });
+    }
 
-      this.svgMap = mySvgMap;
+    if (!this.clickDemoMap) {
+      const clickDemoMap = new svgMap({
+        targetElementID: 'svgMapClickCallback',
+        data: sampleGdpData,
+        onCountryClick: (countryID) => {
+          const label = clickDemoMap.countries[countryID] || countryID;
+          this.setState({
+            clickDemoSelection: `Selected: ${label} (${countryID})`
+          });
+          return false;
+        }
+      });
+      this.clickDemoMap = clickDemoMap;
     }
 
     if (!this.svgMapWithTooltips) {
