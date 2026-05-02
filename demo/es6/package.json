@@ -9,7 +9,7 @@
     "svgmap": "2.19.3"
   },
   "devDependencies": {
-    "serve": "^14.2.4",
+    "serve": "^14.2.6",
     "snowpack": "^1.7.1"
   },
   "scripts": {
