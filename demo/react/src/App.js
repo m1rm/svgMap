@@ -30,46 +30,12 @@ const gdpData = {
 };
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      clickDemoSelection: 'Click a country on the map.'
-    };
-  }
-
   componentDidMount() {
     if (!this.svgMap) {
       this.svgMap = new svgMap({
         targetElementID: 'svgMap',
         data: gdpData
       });
-    }
-
-    if (!this.clickDemoMap) {
-      const clickDemoMap = new svgMap({
-        targetElementID: 'svgMapClickCallback',
-        data: sampleGdpData,
-        onCountryClick: (countryID) => {
-          const label = clickDemoMap.countries[countryID] || countryID;
-          this.setState({
-            clickDemoSelection: `Selected: ${label} (${countryID})`
-          });
-          return false;
-        }
-      });
-      this.clickDemoMap = clickDemoMap;
-    }
-
-    if (!this.svgMapWithTooltips) {
-
-      var mySvgMapWithTooltips = new svgMap({
-        targetElementID: 'svgMapTooltips',
-        data: gdpData,
-        hideFlag: true,
-        showTooltipsOnLoad: ['AF', 'AL', 'DZ']
-      });
-
-      this.svgMapWithTooltips = mySvgMapWithTooltips;
     }
   }
 
@@ -80,10 +46,6 @@ class App extends Component {
         <div className='demo-container'>
           <h2>GDP per capita</h2>
           <div id='svgMap'></div>
-        </div>
-        <div className='demo-container'>
-          <h2>GDP per capita (selected tooltips shown on load)</h2>
-          <div id='svgMapTooltips'></div>
         </div>
       </div>
     );
