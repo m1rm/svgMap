@@ -70,8 +70,11 @@ export default class svgMap {
       // Set to true to open the link on mobile devices, set to false (default) to show the tooltip
       touchLink: false,
 
-      // Set which tooltips to show when the map loads: true for all, an array of country IDs, or a function
-      showTooltipsOnLoad: false,
+      // When false, disables hover/touch-following tooltips (not the on-map persistent labels; see persistentTooltips)
+      showTooltips: true,
+
+      // Persistent on-map tooltips: an array of country IDs, or a function (countryID, countryValues) => boolean
+      persistentTooltips: false,
 
       // Set to true to show the to show a zoom reset button
       showZoomReset: false,
@@ -818,7 +821,9 @@ export default class svgMap {
 
   createMap() {
     // Create the tooltip
-    this.createTooltip();
+    if (this.options.showTooltips) {
+      this.createTooltip();
+    }
 
     // Create map wrappers
     this.mapWrapper = this.createElement(
@@ -1011,12 +1016,14 @@ export default class svgMap {
             countryElement.classList.add('svgMap-active');
 
             const countryID = countryElement.getAttribute('data-id');
-            this.setTooltipContent(this.getTooltipContent(countryID));
-            this.showTooltip(e);
+            if (this.options.showTooltips) {
+              this.setTooltipContent(this.getTooltipContent(countryID));
+              this.showTooltip(e);
 
-            // For touch, move tooltip to the touch position and keep it there
-            if (e.pointerType === 'touch') {
-              this.moveTooltip(e);
+              // For touch, move tooltip to the touch position and keep it there
+              if (e.pointerType === 'touch') {
+                this.moveTooltip(e);
+              }
             }
           }.bind(this)
         );
@@ -1105,7 +1112,11 @@ export default class svgMap {
       }.bind(this)
     );
 
-    if (this.options.showTooltipsOnLoad) {
+    var persistent = this.options.persistentTooltips;
+    if (
+      persistent &&
+      (Array.isArray(persistent) || typeof persistent === 'function')
+    ) {
       this.createPersistentTooltips(countryElements);
     }
 
@@ -1168,12 +1179,17 @@ export default class svgMap {
           if (linkTarget) window.open(link, linkTarget);
           else window.location.href = link;
         } else {
-          // first tap shows tooltip
+          // first tap shows tooltip (or opens link immediately if tooltips are off)
           if (activeCountry) activeCountry.classList.remove('svgMap-active');
           activeCountry = countryElement;
           countryElement.classList.add('svgMap-active');
-          this.setTooltipContent(this.getTooltipContent(countryID));
-          this.showTooltip(e);
+          if (this.options.showTooltips) {
+            this.setTooltipContent(this.getTooltipContent(countryID));
+            this.showTooltip(e);
+          } else {
+            if (linkTarget) window.open(link, linkTarget);
+            else window.location.href = link;
+          }
         }
       } else {
         // Desktop: open immediately
@@ -1299,19 +1315,15 @@ export default class svgMap {
   // Check if a persistent tooltip should be shown on load
 
   shouldShowTooltipOnLoad(countryID) {
-    var showTooltipsOnLoad = this.options.showTooltipsOnLoad;
+    var persistent = this.options.persistentTooltips;
     var countryValues = this.options.data.values[countryID];
 
-    if (showTooltipsOnLoad === true) {
-      return true;
+    if (Array.isArray(persistent)) {
+      return persistent.indexOf(countryID) !== -1;
     }
 
-    if (Array.isArray(showTooltipsOnLoad)) {
-      return showTooltipsOnLoad.indexOf(countryID) !== -1;
-    }
-
-    if (typeof showTooltipsOnLoad === 'function') {
-      return showTooltipsOnLoad(countryID, countryValues);
+    if (typeof persistent === 'function') {
+      return persistent(countryID, countryValues);
     }
 
     return false;
@@ -2305,6 +2317,9 @@ export default class svgMap {
   // Show the tooltip
 
   showTooltip(e) {
+    if (!this.tooltip) {
+      return;
+    }
     this.tooltip.classList.add('svgMap-active');
     this.moveTooltip(e);
   }
@@ -2312,12 +2327,18 @@ export default class svgMap {
   // Hide the tooltip
 
   hideTooltip() {
+    if (!this.tooltip) {
+      return;
+    }
     this.tooltip.classList.remove('svgMap-active');
   }
 
   // Move the tooltip
 
   moveTooltip(e) {
+    if (!this.tooltip) {
+      return;
+    }
     var x = e.pageX || (e.touches && e.touches[0] ? e.touches[0].pageX : null);
     var y = e.pageY || (e.touches && e.touches[0] ? e.touches[0].pageY : null);
 
