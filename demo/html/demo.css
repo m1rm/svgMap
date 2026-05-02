@@ -36,8 +36,14 @@ body {
 h2 {
   text-align: center;
   font-size: 32px;
+  line-height: 1.2;
   margin: 0 0 25px;
   font-weight: normal;
+}
+
+h2 span {
+  font-size: 18px;
+  color: #666;
 }
 
 @media (max-width: 900px) {

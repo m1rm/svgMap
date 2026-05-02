@@ -17,7 +17,7 @@
       <!-- Demo GPD -->
 
       <div class="demo-container">
-        <h2>GDP per capita (PPP)</h2>
+        <h2>GDP per capita</h2>
 
         <div id="svgMapGPD"></div>
         <script src="./data/gdp.js"></script>
@@ -34,7 +34,7 @@
       <!-- Demo GPD with selected tooltips shown on load -->
 
       <div class="demo-container">
-        <h2>GDP per capita (selected tooltips shown on load)</h2>
+        <h2>GDP per capita<br><span>(persistent tooltips, custom country click)</span></h2>
 
         <div id="svgMapGPDTooltips"></div>
         <script>
@@ -43,7 +43,11 @@
             data: svgMapDataGPD,
             hideFlag: true,
             showTooltips: false,
-            persistentTooltips: ['DE', 'IN'],
+            persistentTooltips: ['DE', 'IN', 'BR'],
+            onCountryClick: function (countryID, event) {
+              alert('Yay, you clicked on: ' + countryID);
+              return false;
+            },
             mouseWheelZoomEnabled: true,
             mouseWheelZoomWithKey: true
           });
@@ -53,7 +57,7 @@
       <!-- Demo population -->
 
       <div class="demo-container">
-        <h2>Population desity (emojis as flags)</h2>
+        <h2>Population desity<br><span>(emojis as flags)</span></h2>
 
         <div id="svgMapPopulation"></div>
         <script src="./data/population.js"></script>
@@ -72,7 +76,7 @@
       <!-- Demo person height in German -->
 
       <div class="demo-container">
-        <h2>Average person height (no flags, German language)</h2>
+        <h2>Average person height<br><span>(no flags, German language)</span></h2>
 
         <div id="svgMapPersonHeight"></div>
         <script src="./data/personHeight.js"></script>
@@ -98,7 +102,7 @@
       <!-- Demo EURO as currency -->
 
       <div class="demo-container">
-        <h2>Countries using Euro as currency (custom tooltips)</h2>
+        <h2>Countries using Euro as currency<br><span>(custom tooltips)</span></h2>
 
         <div id="svgMapEuroCurrency"></div>
         <script>

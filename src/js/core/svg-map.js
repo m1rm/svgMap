@@ -73,6 +73,9 @@ export default class svgMap {
       // When false, disables hover/touch-following tooltips (not the on-map persistent labels; see persistentTooltips)
       showTooltips: true,
 
+      // 'hover' (default): mouse shows tooltip on enter. 'click': mouse opens tooltip on click; touch/pen unchanged.
+      tooltipTrigger: 'hover',
+
       // Persistent on-map tooltips: an array of country IDs, or a function (countryID, countryValues) => boolean
       persistentTooltips: false,
 
@@ -987,7 +990,7 @@ export default class svgMap {
             this.hideTooltip();
             document
               .querySelectorAll('.svgMap-active')
-              .forEach(el => el.classList.remove('svgMap-active'));
+              .forEach((el) => el.classList.remove('svgMap-active'));
           }
         }
 
@@ -996,18 +999,24 @@ export default class svgMap {
         countryElement.addEventListener(
           'pointerenter',
           function (e) {
+            if (
+              e.pointerType === 'mouse' &&
+              this.options.showTooltips &&
+              this.options.tooltipTrigger === 'click'
+            ) {
+              return;
+            }
+
             // Only add pointermove listener for non-touch pointers
             if (e.pointerType !== 'touch') {
-              document.addEventListener(
-                'pointermove',
-                handlePointerMoveBound,
-                { passive: true }
-              );
+              document.addEventListener('pointermove', handlePointerMoveBound, {
+                passive: true
+              });
             }
 
             document
               .querySelectorAll('.svgMap-active')
-              .forEach(el => el.classList.remove('svgMap-active'));
+              .forEach((el) => el.classList.remove('svgMap-active'));
 
             countryElement.parentNode.insertBefore(
               countryElement,
@@ -1042,7 +1051,10 @@ export default class svgMap {
           'touchend',
           function (e) {
             const touch = e.changedTouches[0];
-            const elementAtEnd = document.elementFromPoint(touch.clientX, touch.clientY);
+            const elementAtEnd = document.elementFromPoint(
+              touch.clientX,
+              touch.clientY
+            );
 
             // Only hide if touch ended outside the country or tooltip
             if (
@@ -1053,7 +1065,7 @@ export default class svgMap {
               this.hideTooltip();
               document
                 .querySelectorAll('.svgMap-active')
-                .forEach(el => el.classList.remove('svgMap-active'));
+                .forEach((el) => el.classList.remove('svgMap-active'));
             }
           }.bind(this),
           { passive: true }
@@ -1064,11 +1076,22 @@ export default class svgMap {
           'pointerleave',
           function (e) {
             if (e.pointerType !== 'touch') {
-              document.removeEventListener('pointermove', handlePointerMoveBound);
-              this.hideTooltip();
-              document
-                .querySelectorAll('.svgMap-active')
-                .forEach(el => el.classList.remove('svgMap-active'));
+              document.removeEventListener(
+                'pointermove',
+                handlePointerMoveBound
+              );
+              if (
+                !(
+                  e.pointerType === 'mouse' &&
+                  this.options.showTooltips &&
+                  this.options.tooltipTrigger === 'click'
+                )
+              ) {
+                this.hideTooltip();
+                document
+                  .querySelectorAll('.svgMap-active')
+                  .forEach((el) => el.classList.remove('svgMap-active'));
+              }
             }
           }.bind(this)
         );
@@ -1088,7 +1111,7 @@ export default class svgMap {
             this.hideTooltip();
             document
               .querySelectorAll('.svgMap-active')
-              .forEach(el => el.classList.remove('svgMap-active'));
+              .forEach((el) => el.classList.remove('svgMap-active'));
           }.bind(this),
           { passive: true }
         );
@@ -1123,14 +1146,18 @@ export default class svgMap {
     let pointerStart = null;
     let activeCountry = null;
 
-    this.mapImage.addEventListener('pointerdown', e => {
-      // Ignore right click (on desktop it allows inspecting the chart elements without opening the URL)
-      if (e.button !== 0) return;
+    this.mapImage.addEventListener(
+      'pointerdown',
+      (e) => {
+        // Ignore right click (on desktop it allows inspecting the chart elements without opening the URL)
+        if (e.button !== 0) return;
 
-      pointerStart = { x: e.clientX, y: e.clientY };
-    }, { passive: true });
+        pointerStart = { x: e.clientX, y: e.clientY };
+      },
+      { passive: true }
+    );
 
-    this.mapImage.addEventListener('pointerup', e => {
+    this.mapImage.addEventListener('pointerup', (e) => {
       // Ignore right click (on desktop it allows inspecting the chart elements without opening the URL)
       if (e.button !== 0) return;
 
@@ -1155,7 +1182,57 @@ export default class svgMap {
       const hasLink = !!link;
       const isTouch = e.pointerType === 'touch' || e.pointerType === 'pen';
 
-      if (!hasLink && !hasCallback) return;
+      const isClickTooltipMouse =
+        e.pointerType === 'mouse' &&
+        this.options.showTooltips &&
+        this.options.tooltipTrigger === 'click';
+
+      if (!hasLink && !hasCallback && !isClickTooltipMouse) return;
+
+      if (isClickTooltipMouse && this.options.showTooltips) {
+        const willNavigate =
+          hasLink && countryElement.classList.contains('svgMap-active');
+        const shouldFireCallback = hasCallback && (!hasLink || willNavigate);
+
+        var callbackResultClick;
+        if (shouldFireCallback) {
+          callbackResultClick = this.options.onCountryClick(countryID, e);
+        }
+
+        if (hasLink) {
+          if (callbackResultClick === false) return;
+          if (countryElement.classList.contains('svgMap-active')) {
+            if (linkTarget) window.open(link, linkTarget);
+            else window.location.href = link;
+          } else {
+            this.mapImage
+              .querySelectorAll('.svgMap-country.svgMap-active')
+              .forEach((el) => el.classList.remove('svgMap-active'));
+            countryElement.parentNode.insertBefore(
+              countryElement,
+              this.persistentTooltipGroup || null
+            );
+            countryElement.classList.add('svgMap-active');
+            this.setTooltipContent(this.getTooltipContent(countryID));
+            this.showTooltip(e);
+          }
+          return;
+        }
+
+        if (callbackResultClick === false) return;
+
+        this.mapImage
+          .querySelectorAll('.svgMap-country.svgMap-active')
+          .forEach((el) => el.classList.remove('svgMap-active'));
+        countryElement.parentNode.insertBefore(
+          countryElement,
+          this.persistentTooltipGroup || null
+        );
+        countryElement.classList.add('svgMap-active');
+        this.setTooltipContent(this.getTooltipContent(countryID));
+        this.showTooltip(e);
+        return;
+      }
 
       const willNavigate =
         hasLink &&
@@ -1197,6 +1274,39 @@ export default class svgMap {
         else window.location.href = link;
       }
     });
+
+    this._clickTooltipOutsideHandler = function (ev) {
+      if (ev.pointerType !== 'mouse') return;
+      if (
+        !this.options.showTooltips ||
+        this.options.tooltipTrigger !== 'click' ||
+        !this.tooltip
+      ) {
+        return;
+      }
+      if (!this.tooltip.classList.contains('svgMap-active')) return;
+      var node = ev.target;
+      if (
+        node &&
+        node.closest &&
+        (node.closest('.svgMap-country') || node.closest('.svgMap-tooltip'))
+      ) {
+        return;
+      }
+      this.hideTooltip();
+      if (this.mapImage) {
+        this.mapImage
+          .querySelectorAll('.svgMap-country.svgMap-active')
+          .forEach(function (el) {
+            el.classList.remove('svgMap-active');
+          });
+      }
+    }.bind(this);
+    document.addEventListener(
+      'pointerdown',
+      this._clickTooltipOutsideHandler,
+      true
+    );
 
     // Expose instance
     var me = this;
@@ -1305,7 +1415,9 @@ export default class svgMap {
           'svgMap-persistent-tooltip',
           tooltipObject
         );
-        tooltipElement.append(this.getTooltipContent(countryID, tooltipElement));
+        tooltipElement.append(
+          this.getTooltipContent(countryID, tooltipElement)
+        );
         this.createElement('div', 'svgMap-tooltip-pointer', tooltipElement);
 
         this.persistentTooltipGroup.appendChild(tooltipObject);
