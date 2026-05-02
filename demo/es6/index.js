@@ -1,8 +1,7 @@
 import svgMap from 'svgmap';
-import 'svgmap/style';
 
 // Demo GDP
-import dataGDP from './data/gdp';
+import dataGDP from './data/gdp.js';
 
 new svgMap({
   targetElementID: 'svgMapGPD',
@@ -10,7 +9,7 @@ new svgMap({
 });
 
 // Demo population
-import dataPopulation from './data/population';
+import dataPopulation from './data/population.js';
 
 new svgMap({
   targetElementID: 'svgMapPopulation',
@@ -21,8 +20,8 @@ new svgMap({
 });
 
 // Demo person height in German
-import dataPersonHeight from './data/personHeight';
-import countriesDE from './local/countriesDE';
+import dataPersonHeight from './data/personHeight.js';
+import countriesDE from './local/countriesDE.js';
 
 new svgMap({
   targetElementID: 'svgMapPersonHeight',
@@ -50,6 +49,8 @@ var svgMapEuroCurrency = new svgMap({
     values: {
       AT: { euro: 1, eurozone: 1 }, // Austria
       BE: { euro: 1, eurozone: 1 }, // Belgium
+      BG: { euro: 1, eurozone: 1 }, // Bulgaria
+      HR: { euro: 1, eurozone: 1 }, // Croatia
       CY: { euro: 1, eurozone: 1 }, // Cyprus
       EE: { euro: 1, eurozone: 1 }, // Estonia
       FI: { euro: 1, eurozone: 1 }, // Finland
@@ -77,10 +78,8 @@ var svgMapEuroCurrency = new svgMap({
       VA: { euro: 1, eurozone: 0, color: '#528FCC' }, // Vatican City
 
       // Countries in eurozone but not using euro
-      BG: { euro: 0, eurozone: 1, color: '#a6d2ff' }, // Bulgaria
       CZ: { euro: 0, eurozone: 1, color: '#a6d2ff' }, // Czech Republic
       DK: { euro: 0, eurozone: 1, color: '#a6d2ff' }, // Denmark
-      HR: { euro: 0, eurozone: 1, color: '#a6d2ff' }, // Croatia
       HU: { euro: 0, eurozone: 1, color: '#a6d2ff' }, // Hungary
       PL: { euro: 0, eurozone: 1, color: '#a6d2ff' }, // Poland
       RO: { euro: 0, eurozone: 1, color: '#a6d2ff' }, // Romania

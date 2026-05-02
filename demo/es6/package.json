@@ -6,12 +6,14 @@
   "license": "MIT",
   "main": "index.js",
   "dependencies": {
-    "svgmap": "2.19.1"
+    "svgmap": "2.19.3"
   },
   "devDependencies": {
-    "snowpack": "^3.8.8"
+    "serve": "^14.2.4",
+    "snowpack": "^1.7.1"
   },
   "scripts": {
-    "start": "snowpack dev"
+    "prepare-web-modules": "snowpack",
+    "start": "snowpack && serve . -l 8080"
   }
 }

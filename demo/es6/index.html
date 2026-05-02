@@ -1,49 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <title>svgMap ES6 demos</title>
+  <head>
+    <title>svgMap ES6 demos</title>
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <link rel="stylesheet" href="./demo.css">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
+    <link rel="stylesheet" href="./demo.css" />
+    <link rel="stylesheet" href="./node_modules/svgmap/dist/svg-map.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:400,500"
+      rel="stylesheet"
+    />
 
-  <script type="module" src="/index.js"></script>
-</head>
-<body>
+    <!-- Snowpack 1.x only installs deps to web_modules/; the browser needs an import map for bare specifiers like "svgmap". -->
+    <script type="importmap">
+      {
+        "imports": {
+          "svgmap": "./web_modules/svgmap.js"
+        }
+      }
+    </script>
+    <script type="module" src="./index.js"></script>
+  </head>
+  <body>
+    <div class="demo-wrapper">
+      <!-- Demo GPD -->
 
-  <div class="demo-wrapper">
+      <div class="demo-container">
+        <h2>GDP per capita (PPP)</h2>
+        <div id="svgMapGPD"></div>
+      </div>
 
-    <!-- Demo GPD -->
+      <!-- Demo population -->
 
-    <div class="demo-container">
-      <h2>GDP per capita (PPP)</h2>
-      <div id="svgMapGPD"></div>
+      <div class="demo-container">
+        <h2>Population desity (emojis as flags)</h2>
+        <div id="svgMapPopulation"></div>
+      </div>
+
+      <!-- Demo person height in German -->
+
+      <div class="demo-container">
+        <h2>Average person height (no flags, German language)</h2>
+        <div id="svgMapPersonHeight"></div>
+      </div>
+
+      <!-- Demo custom tooltips -->
+
+      <div class="demo-container">
+        <h2>Countries using Euro as currency (custom tooltips)</h2>
+        <div id="svgMapEuroCurrency"></div>
+      </div>
     </div>
-
-    <!-- Demo population -->
-
-    <div class="demo-container">
-      <h2>Population desity (emojis as flags)</h2>
-      <div id="svgMapPopulation"></div>
-    </div>
-
-    <!-- Demo person height in German -->
-
-    <div class="demo-container">
-      <h2>Average person height (no flags, German language)</h2>
-      <div id="svgMapPersonHeight"></div>
-    </div>
-
-    <!-- Demo custom tooltips -->
-
-    <div class="demo-container">
-      <h2>Countries using Euro as currency (custom tooltips)</h2>
-      <div id="svgMapEuroCurrency"></div>
-    </div>
-
-  </div>
-
-</body>
+  </body>
 </html>
