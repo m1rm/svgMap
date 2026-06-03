@@ -959,72 +959,91 @@ export default class svgMap {
         .forEach((el) => el.classList.remove('svgMap-active'));
     }.bind(this);
 
-    const isClickTooltip = this.options.showTooltips && this.options.tooltipTrigger === 'click';
+    const isClickTooltip =
+      this.options.showTooltips && this.options.tooltipTrigger === 'click';
 
-    this.mapImage.addEventListener('pointerdown', e => {
-      if (!this.options.showTooltips) {
-        return;
-      }
+    const getCountryFromEvent = function (e) {
+      return e.target && e.target.closest
+        ? e.target.closest('.svgMap-country')
+        : null;
+    };
 
-      clearActive();
-
-      const countryElement = e.target;
-      if (countryElement?.tagName !== 'path') {
+    const showCountryTooltip = function (countryElement, e, setActive) {
+      if (setActive) {
         clearActive();
-        this.hideTooltip();
-        return;
       }
-
       countryElement.parentNode.insertBefore(
         countryElement,
         this.persistentTooltipGroup || null
       );
-      countryElement.classList.add('svgMap-active');
-
-      const countryID = countryElement.dataset.id;
-      this.setTooltipContent(this.getTooltipContent(countryID));
+      if (setActive) {
+        countryElement.classList.add('svgMap-active');
+      }
+      this.setTooltipContent(
+        this.getTooltipContent(countryElement.dataset.id)
+      );
       this.showTooltip(e);
+    }.bind(this);
 
-      // For touch, move tooltip to the touch position and keep it there
-      if (e.pointerType === 'touch') {
+    // Touch only: preview tooltip on finger down without marking country active
+    // (active is set on pointerup so link countries keep two-tap navigation)
+    this.mapImage.addEventListener(
+      'pointerdown',
+      (e) => {
+        if (!this.options.showTooltips || e.pointerType !== 'touch') {
+          return;
+        }
+
+        const countryElement = getCountryFromEvent(e);
+        if (!countryElement) {
+          this.hideTooltip();
+          return;
+        }
+
+        showCountryTooltip(countryElement, e, false);
         this.moveTooltip(e);
-      }
-    }, { passive: true });
+      },
+      { passive: true }
+    );
 
-    this.mapImage.addEventListener('pointercancel', e => {
-      this.hideTooltip();
-    }, { passive: true });
+    this.mapImage.addEventListener(
+      'pointercancel',
+      (e) => {
+        if (e.pointerType === 'touch') {
+          this.hideTooltip();
+        }
+      },
+      { passive: true }
+    );
 
-    // Handle touch move - update tooltip position while panning
-    this.mapImage.addEventListener('pointermove', e => {
-      if (e.pointerType === 'mouse' && isClickTooltip) return;
+    // Hover (mouse/pen) and touch drag: delegated pointermove on mapImage
+    this.mapImage.addEventListener(
+      'pointermove',
+      (e) => {
+        if (!this.options.showTooltips) {
+          return;
+        }
 
-      const countryElement = e.target;
-      if (countryElement?.tagName !== 'path') {
-        clearActive();
-        this.hideTooltip();
-        return;
-      }
+        // Click mode: mouse opens tooltip on pointerup only
+        if (e.pointerType === 'mouse' && isClickTooltip) {
+          return;
+        }
 
-      clearActive();
+        const countryElement = getCountryFromEvent(e);
+        if (!countryElement) {
+          clearActive();
+          this.hideTooltip();
+          return;
+        }
 
-      countryElement.parentNode.insertBefore(
-        countryElement,
-        this.persistentTooltipGroup || null
-      );
-      countryElement.classList.add('svgMap-active');
+        showCountryTooltip(countryElement, e, true);
 
-      const countryID = countryElement.dataset.id;
-      if (this.options.showTooltips) {
-        this.setTooltipContent(this.getTooltipContent(countryID));
-        this.showTooltip(e);
-
-        // For touch, move tooltip to the touch position and keep it there
         if (e.pointerType === 'touch') {
           this.moveTooltip(e);
         }
-      }
-    }, { passive: true });
+      },
+      { passive: true }
+    );
 
     Object.keys(mapPaths).forEach(
       function (countryID) {
@@ -1196,7 +1215,12 @@ export default class svgMap {
     });
 
     this._clickTooltipOutsideHandler = function (ev) {
-      if (!this.tooltip.classList.contains('svgMap-active')) return;
+      if (
+        !this.tooltip ||
+        !this.tooltip.classList.contains('svgMap-active')
+      ) {
+        return;
+      }
       var node = ev.target;
       if (
         node &&
@@ -2342,14 +2366,18 @@ export default class svgMap {
     }
     this.tooltip.classList.add('svgMap-active');
 
-    if (e.pointerType !== 'mouse' || (this.options.showTooltips && this.options.tooltipTrigger === 'click')) {
+    if (
+      this.options.showTooltips &&
+      this.options.tooltipTrigger === 'click' &&
+      e.pointerType === 'mouse'
+    ) {
       // don't register event listener in the same frame
       // to prevent it from being triggered immediately
       requestAnimationFrame(() => {
         document.addEventListener(
           'pointerdown',
           this._clickTooltipOutsideHandler,
-          { once: true, passive: true },
+          { once: true, passive: true }
         );
       });
     }
