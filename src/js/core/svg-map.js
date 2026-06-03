@@ -955,7 +955,8 @@ export default class svgMap {
     var countryElements = [];
 
     const clearActive = function clearActive() {
-      this.mapImage.querySelectorAll('.svgMap-active')
+      this.mapImage
+        .querySelectorAll('.svgMap-active')
         .forEach((el) => el.classList.remove('svgMap-active'));
     }.bind(this);
 
@@ -979,9 +980,7 @@ export default class svgMap {
       if (setActive) {
         countryElement.classList.add('svgMap-active');
       }
-      this.setTooltipContent(
-        this.getTooltipContent(countryElement.dataset.id)
-      );
+      this.setTooltipContent(this.getTooltipContent(countryElement.dataset.id));
       this.showTooltip(e);
     }.bind(this);
 
@@ -1073,9 +1072,11 @@ export default class svgMap {
           this.options.data.values[countryID] &&
           this.options.data.values[countryID]['link']
         ) {
-          countryElement.dataset.link = this.options.data.values[countryID]['link'];
+          countryElement.dataset.link =
+            this.options.data.values[countryID]['link'];
           if (this.options.data.values[countryID]['linkTarget']) {
-            countryElement.dataset.linkTarget = this.options.data.values[countryID]['linkTarget'];
+            countryElement.dataset.linkTarget =
+              this.options.data.values[countryID]['linkTarget'];
           }
         }
       }.bind(this)
@@ -1215,10 +1216,7 @@ export default class svgMap {
     });
 
     this._clickTooltipOutsideHandler = function (ev) {
-      if (
-        !this.tooltip ||
-        !this.tooltip.classList.contains('svgMap-active')
-      ) {
+      if (!this.tooltip || !this.tooltip.classList.contains('svgMap-active')) {
         return;
       }
       var node = ev.target;
@@ -2393,7 +2391,10 @@ export default class svgMap {
     }
 
     this.tooltip.classList.remove('svgMap-active');
-    document.removeEventListener('pointerdown', this._clickTooltipOutsideHandler);
+    document.removeEventListener(
+      'pointerdown',
+      this._clickTooltipOutsideHandler
+    );
   }
 
   // Move the tooltip
