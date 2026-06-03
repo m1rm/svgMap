@@ -969,7 +969,7 @@ export default class svgMap {
         : null;
     };
 
-    const showCountryTooltip = function (countryElement, e, setActive) {
+    const raiseCountry = function (countryElement, setActive) {
       if (setActive) {
         clearActive();
       }
@@ -980,6 +980,10 @@ export default class svgMap {
       if (setActive) {
         countryElement.classList.add('svgMap-active');
       }
+    }.bind(this);
+
+    const showCountryTooltip = function (countryElement, e, setActive) {
+      raiseCountry(countryElement, setActive);
       this.setTooltipContent(this.getTooltipContent(countryElement.dataset.id));
       this.showTooltip(e);
     }.bind(this);
@@ -1015,23 +1019,24 @@ export default class svgMap {
       { passive: true }
     );
 
-    // Hover (mouse/pen) and touch drag: delegated pointermove on mapImage
+    // Hover (mouse/pen) and touch drag: raise country + optional floating tooltip
     this.mapImage.addEventListener(
       'pointermove',
       (e) => {
-        if (!this.options.showTooltips) {
-          return;
-        }
-
-        // Click mode: mouse opens tooltip on pointerup only
-        if (e.pointerType === 'mouse' && isClickTooltip) {
-          return;
-        }
-
         const countryElement = getCountryFromEvent(e);
         if (!countryElement) {
           clearActive();
-          this.hideTooltip();
+          if (this.options.showTooltips) {
+            this.hideTooltip();
+          }
+          return;
+        }
+
+        const mouseClickMode = e.pointerType === 'mouse' && isClickTooltip;
+
+        // Always raise hovered country (SVG paint order + .svgMap-active stroke)
+        if (!this.options.showTooltips || mouseClickMode) {
+          raiseCountry(countryElement, true);
           return;
         }
 
