@@ -1002,7 +1002,7 @@ export default class svgMap {
       }
       countryElement.parentNode.insertBefore(
         countryElement,
-        this.persistentTooltipGroup || null
+        this.persistentTooltipGroup || this.pinGroup || null
       );
       if (setActive) {
         countryElement.classList.add('svgMap-active');
@@ -1202,7 +1202,7 @@ export default class svgMap {
         clearActive();
         countryElement.parentNode.insertBefore(
           countryElement,
-          this.persistentTooltipGroup || null
+          this.persistentTooltipGroup || this.pinGroup || null
         );
         countryElement.classList.add('svgMap-active');
         this.setTooltipContent(this.getTooltipContent(countryID));
