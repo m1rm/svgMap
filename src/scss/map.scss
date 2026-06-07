@@ -259,3 +259,13 @@
 .svgMap-wrapper.svgMap-country-click-callback .svgMap-map-wrapper .svgMap-country {
   cursor: pointer;
 }
+
+// Static pins
+
+.svgMap-pin-group {
+  pointer-events: none;
+}
+
+.svgMap-pin {
+  transition: r 250ms;
+}
