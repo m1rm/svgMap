@@ -124,7 +124,11 @@ export default class svgMap {
 
       // Width and height of the pin image in SVG units (viewBox is 2000 × 1001)
       pinImageWidth: 20,
-      pinImageHeight: 20
+      pinImageHeight: 20,
+
+      // Offset from computed pin position, in SVG units (added after auto center or pinX/pinY)
+      pinOffsetX: 0,
+      pinOffsetY: 0
     };
 
     this.options = Object.assign({}, defaultOptions, options);
@@ -1443,6 +1447,18 @@ export default class svgMap {
           cx = largestBB.x + largestBB.width / 2;
           cy = largestBB.y + largestBB.height / 2;
         }
+
+        var offsetX =
+          countryValues && countryValues.pinOffsetX != null
+            ? countryValues.pinOffsetX
+            : this.options.pinOffsetX;
+        var offsetY =
+          countryValues && countryValues.pinOffsetY != null
+            ? countryValues.pinOffsetY
+            : this.options.pinOffsetY;
+        cx += offsetX;
+        cy += offsetY;
+
         var color =
           (countryValues && countryValues.pinColor) || this.options.pinColor;
         var size =

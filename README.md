@@ -110,6 +110,8 @@ You can pass the following options into svgMap:
 | `pinImage` | `string` | | Image URL used as a pin instead of the default circle. Can be overridden per country via `data.values[id].pinImage`. |
 | `pinImageWidth` | `number` | `20` | Width of the pin image in SVG units. Can be overridden per country via `data.values[id].pinImageWidth`. |
 | `pinImageHeight` | `number` | `20` | Height of the pin image in SVG units. Can be overridden per country via `data.values[id].pinImageHeight`. |
+| `pinOffsetX` | `number` | `0` | Horizontal offset from the pin position, in SVG units. Added after auto placement or `pinX`/`pinY`. Can be overridden per country via `data.values[id].pinOffsetX`. |
+| `pinOffsetY` | `number` | `0` | Vertical offset from the pin position, in SVG units. Added after auto placement or `pinX`/`pinY`. Can be overridden per country via `data.values[id].pinOffsetY`. |
 | `onGetPin` | `function` | | Custom pin element. Signature: `function (countryID, countryValues) { return svgElement; }`. Return an SVG element (e.g. `<g>`, `<path>`) to use instead of the default circle or image pin. The library positions it at the pin coordinates via `transform`. Return `null` to fall back to the default pin. |
 | `onGetTooltip` | `function` | | Called when a tooltip is created to custimize the tooltip content (`function (tooltipDiv, countryID, countryValues) { return 'Custom HTML'; }`) |
 | `onCountryClick` | `function` | | Called when the user clicks a country (primary button, pointer released without dragging). Signature: `function (countryID, event) { … }`. Use this for custom actions instead of or in addition to `data.values.link`. Return `false` to skip opening the URL when the country has a `link`. On touch devices with a link, the callback runs when the tap would navigate (not on the first tap that only shows the tooltip). Countries show a pointer cursor while this option is set. |
@@ -132,6 +134,8 @@ You can pass the following options into svgMap:
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinSize` | `number` | | Pin radius for this country (circle pins only) |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinX` | `number` | | Pin X position in SVG units; use with `pinY` to override auto placement |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinY` | `number` | | Pin Y position in SVG units; use with `pinX` to override auto placement |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinOffsetX` | `number` | | Horizontal offset from the pin position, in SVG units (after auto placement or `pinX`/`pinY`) |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinOffsetY` | `number` | | Vertical offset from the pin position, in SVG units (after auto placement or `pinX`/`pinY`) |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinImage` | `string` | | Image URL used as the pin for this country |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinImageWidth` | `number` | | Width of the pin image for this country |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinImageHeight` | `number` | | Height of the pin image for this country |
