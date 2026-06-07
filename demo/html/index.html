@@ -38,21 +38,22 @@
 
         <script>
           var svgMapDataGPDWithPins = svgMapDataGPD;
-          svgMapDataGPDWithPins.values['AU'].pinImage = 'https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@latest/svg/au.svg';
-          svgMapDataGPDWithPins.values['AU'].pinImageWidth = 60;
-          svgMapDataGPDWithPins.values['AU'].pinImageHeight = 60;
+
+          svgMapDataGPDWithPins.values['AO'].pinImage = 'https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@latest/svg/ao.svg';
 
           svgMapDataGPDWithPins.values['AR'].pinImage = 'https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@latest/svg/ar.svg';
-          svgMapDataGPDWithPins.values['AR'].pinImageWidth = 60;
-          svgMapDataGPDWithPins.values['AR'].pinImageHeight = 60;
           svgMapDataGPDWithPins.values['AR'].pinOffsetX = -5;
           svgMapDataGPDWithPins.values['AR'].pinOffsetY = -20;
 
+          svgMapDataGPDWithPins.values['AU'].pinImage = 'https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@latest/svg/au.svg';
+          
           svgMapDataGPDWithPins.values['BR'].pinImage = 'https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@latest/svg/br.svg';
-          svgMapDataGPDWithPins.values['BR'].pinImageWidth = 60;
-          svgMapDataGPDWithPins.values['BR'].pinImageHeight = 60;
           svgMapDataGPDWithPins.values['BR'].pinOffsetX = 30;
           svgMapDataGPDWithPins.values['BR'].pinOffsetY = -20;
+
+          svgMapDataGPDWithPins.values['CD'].pinImage = 'https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@latest/svg/cd.svg';
+
+          svgMapDataGPDWithPins.values['MX'].pinImage = 'https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@latest/svg/mx.svg';
         </script>
 
         <div id="svgMapGPDPins"></div>
@@ -62,7 +63,12 @@
             data: svgMapDataGPDWithPins,
             hideFlag: true,
             showTooltips: false,
-            staticPins: ['DE', 'FR', 'ES', 'AU', 'AR', 'BR'],
+            staticPins: [
+              'DE', 'FR', 'ES',
+              'AO', 'AR', 'AU', 'BR', 'CD', 'MX'
+            ],
+            pinImageWidth: 60,
+            pinImageHeight: 60,
             mouseWheelZoomEnabled: true,
             mouseWheelZoomWithKey: true
           });
