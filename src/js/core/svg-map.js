@@ -107,7 +107,11 @@ export default class svgMap {
       staticPins: false,
 
       // Default pin fill color
-      pinColor: '#CC0033',
+      pinColor: '#000000',
+
+      // Default pin stroke color and width (circle pins; width is in screen pixels with non-scaling stroke)
+      pinStrokeColor: '#ffffff',
+      pinStrokeWidth: 1.5,
 
       // Default pin radius in SVG units (viewBox is 2000 × 1001)
       pinSize: 8,
@@ -1443,6 +1447,12 @@ export default class svgMap {
           (countryValues && countryValues.pinColor) || this.options.pinColor;
         var size =
           (countryValues && countryValues.pinSize) || this.options.pinSize;
+        var strokeColor =
+          (countryValues && countryValues.pinStrokeColor) ||
+          this.options.pinStrokeColor;
+        var strokeWidth =
+          (countryValues && countryValues.pinStrokeWidth) ||
+          this.options.pinStrokeWidth;
 
         if (typeof this.options.onGetPin === 'function') {
           var custom = this.options.onGetPin(countryID, countryValues);
@@ -1489,6 +1499,11 @@ export default class svgMap {
         circle.setAttribute('cy', cy);
         circle.setAttribute('r', size);
         circle.setAttribute('fill', color);
+        if (strokeWidth > 0) {
+          circle.setAttribute('stroke', strokeColor);
+          circle.setAttribute('stroke-width', strokeWidth);
+          circle.setAttribute('vector-effect', 'non-scaling-stroke');
+        }
         circle.setAttribute('data-id', countryID);
         circle.classList.add('svgMap-pin');
         this.pinGroup.appendChild(circle);

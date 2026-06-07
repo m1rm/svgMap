@@ -102,6 +102,15 @@ You can pass the following options into svgMap:
 | `showTooltips` | `boolean` | `true` | When `false`, disables hover and touch-following tooltips only. Persistent on-map labels from `persistentTooltips` are unaffected. On touch devices, countries with a `link` open it on the first tap instead of using the two-tap pattern (first tap preview, second tap navigate). |
 | `tooltipTrigger` | `'hover'`, `'click'` | `'hover'` | How the floating tooltip opens with the **mouse**: `'hover'` opens on mouseenter/mouseleave.`'click'` opens on primary click and closes when clicking outside the map countries or tooltip. Only applies when `showTooltips` is `true`. |
 | `persistentTooltips` | `false`, `array`, `function` | `false` | Persistent tooltips fixed on the map when it loads: an array of country IDs, or a function (`function (countryID, countryValues) { … }`) to decide per country. Independent of `showTooltips`. Best used with `showTooltips: false` or `tooltipTrigger: 'click'`. |
+| `staticPins` | `false`, `array`, `function` | `false` | Static pins on the map at load time: an array of [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country IDs (e.g. `['DE', 'FR']`), or a function (`function (countryID, countryValues) { … }`) to decide per country. Pins are placed at the geographic center of each country (largest landmass). Independent of `showTooltips`. |
+| `pinColor` | `string` | `'#000000'` | Default fill color for circle pins. Accepts CSS vars, color names, rgb or hex values. Can be overridden per country via `data.values[id].pinColor`. |
+| `pinStrokeColor` | `string` | `'#ffffff'` | Default stroke color for circle pins. Can be overridden per country via `data.values[id].pinStrokeColor`. |
+| `pinStrokeWidth` | `number` | `1` | Default stroke width for circle pins, in screen pixels (non-scaling stroke). Can be overridden per country via `data.values[id].pinStrokeWidth`. Set to `0` for no stroke. |
+| `pinSize` | `number` | `8` | Default radius for circle pins, in SVG units (viewBox is 2000 × 1001). Can be overridden per country via `data.values[id].pinSize`. |
+| `pinImage` | `string` | | Image URL used as a pin instead of the default circle. Can be overridden per country via `data.values[id].pinImage`. |
+| `pinImageWidth` | `number` | `20` | Width of the pin image in SVG units. Can be overridden per country via `data.values[id].pinImageWidth`. |
+| `pinImageHeight` | `number` | `20` | Height of the pin image in SVG units. Can be overridden per country via `data.values[id].pinImageHeight`. |
+| `onGetPin` | `function` | | Custom pin element. Signature: `function (countryID, countryValues) { return svgElement; }`. Return an SVG element (e.g. `<g>`, `<path>`) to use instead of the default circle or image pin. The library positions it at the pin coordinates via `transform`. Return `null` to fall back to the default pin. |
 | `onGetTooltip` | `function` | | Called when a tooltip is created to custimize the tooltip content (`function (tooltipDiv, countryID, countryValues) { return 'Custom HTML'; }`) |
 | `onCountryClick` | `function` | | Called when the user clicks a country (primary button, pointer released without dragging). Signature: `function (countryID, event) { … }`. Use this for custom actions instead of or in addition to `data.values.link`. Return `false` to skip opening the URL when the country has a `link`. On touch devices with a link, the callback runs when the tap would navigate (not on the first tap that only shows the tooltip). Countries show a pointer cursor while this option is set. |
 | `countries` | `object` | | Additional options specific to countries: |
@@ -117,6 +126,15 @@ You can pass the following options into svgMap:
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ color` | `string` | | Forces a color for this country |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ link` | `string` | | An URL to redirect to when clicking the country |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ linkTarget` | `string` | | The target of the link. By default the link will be opened in the same tab. Use `'_blank'` to open the link in a new tab |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinColor` | `string` | | Pin fill color for this country (circle pins only) |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinStrokeColor` | `string` | | Pin stroke color for this country (circle pins only) |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinStrokeWidth` | `number` | | Pin stroke width for this country, in screen pixels (circle pins only) |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinSize` | `number` | | Pin radius for this country (circle pins only) |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinX` | `number` | | Pin X position in SVG units; use with `pinY` to override auto placement |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinY` | `number` | | Pin Y position in SVG units; use with `pinX` to override auto placement |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinImage` | `string` | | Image URL used as the pin for this country |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinImageWidth` | `number` | | Width of the pin image for this country |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`↳ pinImageHeight` | `number` | | Height of the pin image for this country |
 | `countryNames` | `object` | | An object with the [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code as key and the country name as value |
 ---
 
